@@ -14,8 +14,19 @@ SELECT
   p.property_id,
   p.name AS property_name,
   COUNT(b.booking_id) AS booking_count,
-  ROW_NUMBER() OVER (ORDER BY COUNT(b.booking_id) DESC) AS property_rank
+  ROW_NUMBER() OVER (ORDER BY COUNT(b.booking_id) DESC) AS row_number_rank
 FROM properties p
 LEFT JOIN bookings b ON p.property_id = b.property_id
 GROUP BY p.property_id, p.name
-ORDER BY property_rank;
+ORDER BY row_number_rank;
+
+-- 3. Rank Properties by Number of Bookings Using RANK
+SELECT 
+  p.property_id,
+  p.name AS property_name,
+  COUNT(b.booking_id) AS booking_count,
+  RANK() OVER (ORDER BY COUNT(b.booking_id) DESC) AS rank
+FROM properties p
+LEFT JOIN bookings b ON p.property_id = b.property_id
+GROUP BY p.property_id, p.name
+ORDER BY rank;
