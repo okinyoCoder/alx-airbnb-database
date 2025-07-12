@@ -110,12 +110,63 @@ FULL OUTER JOIN bookings b ON u.user_id = b.user_id;
 - Indexes have been created for performance on frequent queries (e.g., by email, location, or foreign key relations).
 
 ---
+## 🔍 Query 1: Properties with Average Rating > 4.0
 
+Retrieves all properties where the average guest rating is greater than 4.0.
+
+```sql
+SELECT 
+  p.property_id,
+  p.name,
+  p.description,
+  p.pricepernight
+FROM properties p
+WHERE (
+  SELECT AVG(r.rating)
+  FROM reviews r
+  WHERE r.property_id = p.property_id
+) > 4.0;
+```
+
+### 📝 Explanation
+- A subquery calculates the average rating for each property.
+- Only properties with an average rating greater than 4.0 are returned.
+
+---
+
+## 🔍 Query 2: Users with More Than 3 Bookings
+
+Identifies users who have made more than three bookings using a correlated subquery.
+
+```sql
+SELECT 
+  u.user_id,
+  u.first_name,
+  u.last_name,
+  u.email
+FROM users u
+WHERE (
+  SELECT COUNT(*)
+  FROM bookings b
+  WHERE b.user_id = u.user_id
+) > 3;
+```
+
+### 📝 Explanation
+- A correlated subquery counts the number of bookings per user.
+- Users with more than 3 bookings are selected.
+
+---
+
+## 🧠 Notes
+- Ensure foreign key relationships are properly set to maintain data consistency.
+- Use indexes on `bookings.user_id` and `reviews.property_id` for performance optimization on these queries.
 ## 📂 Structure
 
 ```
 📦booking-system-db
  ┣ 📜schema.sql
+   📜subqueries.sql
  ┣ 📜README.md
 ```
 
