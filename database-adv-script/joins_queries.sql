@@ -13,7 +13,6 @@ SELECT
 FROM bookings b
 INNER JOIN users u ON b.user_id = u.user_id;
 
-
 SELECT 
   p.property_id,
   p.name AS property_name,
@@ -24,8 +23,8 @@ SELECT
   r.comment,
   r.created_at AS review_created_at
 FROM properties p
-LEFT JOIN reviews r ON p.property_id = r.property_id;
-
+LEFT JOIN reviews r ON p.property_id = r.property_id
+ORDER BY p.name ASC, r.created_at DESC;
 
 SELECT 
   u.user_id,

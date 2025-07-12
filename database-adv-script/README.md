@@ -161,6 +161,51 @@ WHERE (
 ## 🧠 Notes
 - Ensure foreign key relationships are properly set to maintain data consistency.
 - Use indexes on `bookings.user_id` and `reviews.property_id` for performance optimization on these queries.
+
+# 📊 SQL Analytics – User Booking Count & Property Ranking
+
+This document describes how to:
+1. Calculate the total number of bookings per user.
+2. Rank properties by total bookings using window functions.
+
+---
+
+## 🔹 1. Total Number of Bookings by Each User
+
+This query calculates how many bookings each user has made.
+
+```sql
+SELECT 
+  u.user_id,
+  u.first_name,
+  u.last_name,
+  COUNT(b.booking_id) AS total_bookings
+FROM users u
+LEFT JOIN bookings b ON u.user_id = b.user_id
+GROUP BY u.user_id, u.first_name, u.last_name
+ORDER BY total_bookings DESC;
+
+# 📊 Rank Properties by Number of Bookings (Using RANK)
+
+This document describes how to:
+1. Rank properties by total bookings using window functions.
+
+---
+
+## 🔹 2. This query ranks all properties based on how many bookings they have received.
+
+This query calculates how many bookings each user has made.
+SELECT 
+  p.property_id,
+  p.name AS property_name,
+  COUNT(b.booking_id) AS booking_count,
+  RANK() OVER (ORDER BY COUNT(b.booking_id) DESC) AS property_rank
+FROM properties p
+LEFT JOIN bookings b ON p.property_id = b.property_id
+GROUP BY p.property_id, p.name
+ORDER BY property_rank;
+
+
 ## 📂 Structure
 
 ```
